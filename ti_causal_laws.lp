@@ -82,4 +82,44 @@ impossible(SEA, I) :-
     occurs(MAA, I);
     occurs(PAA, I).
 
+% state constraints
+% inertial fluents
+-holds(status(M, K1), I) :-         %(0.16)
+    holds(status(M, K2), I),
+    K1 != K2.
 
+-holds(next_name(M), I) :-          %(0.17)
+    holds(next_name(M1), I),
+    M != M1.
+
+-holds(active_goal(G), I) :-        %(0.18)
+    -holds(minor(G), I),
+    holds(G, I).
+
+holds(active_goal(G1), I) :-        %(0.19)
+    holds(immediate_child_goal(G1, G), I),
+    holds(active_goal(G), I),
+    goal(M, G),
+    goal(M1, G1),
+    -holds(G1, I),
+    holds(status(M1, -1), I).
+
+-holds(active_goal(G1), I) :-       %(0.20)
+    holds(minor(G1), I),
+    holds(immediate_child_goal(G1, G), I),
+    -holds(active_goal(G), I).
+
+-holds(active_goal(G1), I) :-       %(0.21)
+    holds(minor(G1), I),
+    holds(G1, I),
+    holds(immediate_child_goal(G1, G), I),
+    holds(active_goal(G), I).
+
+-holds(active_goal(G1), I) :-       %(0.22)
+    holds(minor(G1), I),
+    goal(M1, G1),
+    holds(status(M1, K1), I),
+    length(M1, K1),
+    -holds(G1, I),
+    holds(immediate_child_goal(G1, G), I),
+    holds(active_goal(G), I).
